@@ -3,10 +3,11 @@ import React, { useEffect, useRef} from "react";
 interface InvisibleInputProps {
     text:string;
     handleTextChange: (text:string) => void
+    onEnter: () => void
 }
 
 
-export default function InvisibleInput({text, handleTextChange} : InvisibleInputProps) {
+export default function InvisibleInput({text, handleTextChange, onEnter} : InvisibleInputProps) {
   
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -23,6 +24,12 @@ export default function InvisibleInput({text, handleTextChange} : InvisibleInput
     handleTextChange(e.target.value)
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) =>{
+    if(e.key == "Enter"){
+        onEnter()
+    }
+  }
+
   return (
     <div
       className="relative w-full h-screen flex flex-col items-center justify-center"
@@ -33,10 +40,11 @@ export default function InvisibleInput({text, handleTextChange} : InvisibleInput
         type="text"
         value={text}
         onChange={handleChange}
+        onKeyDown={handleKeyDown}
         className="absolute opacity-0 pointer-events-none"
         autoFocus
       />
-      <p className="text-xl font-mono">{text || "Start typing..."}</p>
+      <p className="text-xl font-mono">{text ? text.length> 5 ? text.substring(0,5) :  text : "Start typing..."}</p>
     </div>
   );
 }

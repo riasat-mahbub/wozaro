@@ -8,13 +8,22 @@ export default function Home() {
     const [text, setText] = useState("");
 
     const handleTextChange = (text: string) =>{
-        setText(text)
+        if(text.length>5){
+            onFinish()
+        }else{
+            setText(text)
+        }
+        
         console.log(text)
+    }
+
+    const onFinish = () =>{
+        setText("")
     }
     return(
         <div>
             <BoxGrid/>
-            <InvisibleInput text={text} handleTextChange={handleTextChange}/>
+            <InvisibleInput text={text} handleTextChange={handleTextChange} onEnter={onFinish}/>
         </div>
     )
 }
