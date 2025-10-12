@@ -4,25 +4,22 @@ import { useEffect, useState } from "react";
 import { BoxGrid } from "./components/BoxGrid"
 import InvisibleInput from "./components/InvisibleInput";
 import { generateTodaysAnswer } from "./data/todaysAnswer";
+import { Answer } from "../types/Answer";
 
 export default function Home() {
 
     const MAX_ROW = 5
     const MAX_COLS = 5
 
-    const [answers, setAnswers] = useState<string[]>( (() =>
-        Array(MAX_ROW).fill("")
-    ));
+    const [answers, setAnswers] = useState<Answer[]>(() =>
+        Array.from({ length: MAX_ROW }, () => ({ text: "", isSubmitted: false }))
+    );
     const [currentRow, setCurrentRow]  = useState<number>(0);
     const [text, setText] = useState<string>("");
-    const [todaysAnswer, setTodaysAnswer] = useState("")
     const [inputDisabled, setInputDisabled] = useState(false)
 
-    useEffect( () =>{
-        const ans = generateTodaysAnswer()
-        setTodaysAnswer(ans)
-        console.log(ans)
-    }, [])
+    const todaysAnswer = generateTodaysAnswer()
+    console.log(todaysAnswer)
 
 
 
@@ -40,7 +37,7 @@ export default function Home() {
     const changeAnswer = (answer: string) =>{
         setAnswers(prev => {
             const copy = [...prev];
-            copy[currentRow] = answer;
+            copy[currentRow].text = answer;
             return copy;
         });
 
@@ -49,7 +46,7 @@ export default function Home() {
     const onFinish = () =>{
         if(inputDisabled || text.length === 0) return
 
-        if(answers[currentRow] === todaysAnswer){
+        if(answers[currentRow].text === todaysAnswer){
             setInputDisabled(true)
             console.log("WINNer")
         }else if(currentRow >=MAX_ROW-1){
@@ -58,6 +55,11 @@ export default function Home() {
         }
         
         if(currentRow < MAX_ROW -1){
+            setAnswers(prev => {
+                const copy = [...prev];
+                copy[currentRow].isSubmitted = true;
+                return copy;
+            });
             setCurrentRow(currentRow + 1);
         }else{
             setCurrentRow(MAX_ROW)
@@ -66,7 +68,7 @@ export default function Home() {
     }
     return(
         <div>
-            <BoxGrid answers={answers} numCol={MAX_COLS} todaysAnswer={todaysAnswer} currentRow={currentRow}/>
+            <BoxGrid answers={answers} numCol={MAX_COLS} todaysAnswer={todaysAnswer}/>
             <InvisibleInput text={text} handleTextChange={handleTextChange} onEnter={onFinish} disabled={inputDisabled}/>
         </div>
     )

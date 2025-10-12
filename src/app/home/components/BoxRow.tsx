@@ -1,18 +1,18 @@
 import { useEffect } from "react";
 import { Box } from "./Box"
+import { Answer } from "@/app/types/Answer";
 
 interface BoxRowProps{
-    answer: string;
+    answer: Answer;
     numCol: number;
     todaysAnswer: string;
-    submittedRow: boolean;
 }
 
-export default function BoxRow({answer, numCol, todaysAnswer, submittedRow}: BoxRowProps){
-    const letters = Array.from({ length: numCol }, (_, i) => answer[i] || "");
+export default function BoxRow({answer, numCol, todaysAnswer}: BoxRowProps){
+    const letters = Array.from({ length: numCol }, (_, i) => answer.text[i] || "");
 
     const getColorFromAnswer = (val:string, idx:number) =>{
-        if(!submittedRow) return "bg-transparent"
+        if(!answer.isSubmitted) return "bg-transparent"
         if(val == todaysAnswer[idx]){
             return "bg-emerald-600"
         }else{
