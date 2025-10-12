@@ -44,7 +44,7 @@ export default function InvisibleInput({text, handleTextChange, onEnter} : Invis
         className="absolute opacity-0 pointer-events-none"
         autoFocus
       />
-      <p className="text-xl font-mono">{text ? text.length> 5 ? text.substring(0,5) :  text : "Start typing..."}</p>
+      <p className="text-xl font-mono">{text ? "..." :  "Start typing..."}</p>
     </div>
   );
 }
