@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BoxGrid } from "./components/BoxGrid"
 import InvisibleInput from "./components/InvisibleInput";
 import { generateTodaysAnswer } from "./data/todaysAnswer";
@@ -18,8 +18,12 @@ export default function Home() {
     const [text, setText] = useState<string>("");
     const [inputDisabled, setInputDisabled] = useState(false)
 
-    const todaysAnswer = generateTodaysAnswer()
-    console.log(todaysAnswer)
+    const todaysAnswer = useRef<string>("")
+
+    useEffect( () =>{
+        todaysAnswer.current = generateTodaysAnswer()
+        console.log(todaysAnswer.current)
+    }, [])
 
 
 
@@ -46,7 +50,7 @@ export default function Home() {
     const onFinish = () =>{
         if(inputDisabled || text.length === 0) return
 
-        if(answers[currentRow].text === todaysAnswer){
+        if(answers[currentRow].text === todaysAnswer.current){
             setInputDisabled(true)
             console.log("WINNer")
         }else if(currentRow >=MAX_ROW-1){
@@ -54,7 +58,7 @@ export default function Home() {
             console.log("LOSER")
         }
         
-        if(currentRow < MAX_ROW -1){
+        if(currentRow < MAX_ROW){
             setAnswers(prev => {
                 const copy = [...prev];
                 copy[currentRow].isSubmitted = true;
@@ -68,7 +72,7 @@ export default function Home() {
     }
     return(
         <div>
-            <BoxGrid answers={answers} numCol={MAX_COLS} todaysAnswer={todaysAnswer}/>
+            <BoxGrid answers={answers} numCol={MAX_COLS} todaysAnswer={todaysAnswer.current}/>
             <InvisibleInput text={text} handleTextChange={handleTextChange} onEnter={onFinish} disabled={inputDisabled}/>
         </div>
     )
