@@ -5,6 +5,7 @@ import { BoxGrid } from "./components/BoxGrid";
 import InvisibleInput from "./components/InvisibleInput";
 import { generateTodaysAnswer } from "./data/todaysAnswer";
 import { Answer } from "../types/Answer";
+import OnScreenKeyboard from "./components/OnScreenKeyboard";
 
 export default function Home() {
   const MAX_ROW = 5;
@@ -128,6 +129,33 @@ export default function Home() {
     setText("");
   };
 
+  const computeLetterStates = (answers: Answer[]) => {
+  const states: Record<string, "correct" | "present" | "absent" | "unused"> = {};
+
+  for (const ans of answers) {
+    if (!ans.isSubmitted) continue;
+
+    for (const { letter, state } of ans.letters) {
+      if (!letter) continue;
+      const upper = letter.toLowerCase();
+
+      // Upgrade logic: correct > present > absent > unused
+      const prev = states[upper];
+      if (state === "correct" || prev === "correct") {
+        states[upper] = "correct";
+      } else if (state === "present" || prev === "present") {
+        states[upper] = "present";
+      } else if (state === "absent" || !prev) {
+        states[upper] = "absent";
+      } else {
+        states[upper] = "unused";
+      }
+    }
+  }
+
+  return states;
+};
+
   const handleKeyPress = (key: string) => {
     if (inputDisabled) return;
     const letter = key.toLowerCase();
@@ -143,8 +171,10 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center">
-      <BoxGrid answers={answers} numCol={MAX_COLS} todaysAnswer={todaysAnswer.current} />
-      <InvisibleInput text={text} handleTextChange={handleTextChange} onEnter={() => onFinish()} disabled={inputDisabled} />
+        <BoxGrid answers={answers} numCol={MAX_COLS} todaysAnswer={todaysAnswer.current} />
+        <InvisibleInput text={text} handleTextChange={handleTextChange} onEnter={() => onFinish()} disabled={inputDisabled} />
+        <OnScreenKeyboard onKeyPress={(k) => handleKeyPress(k)} onEnter={() => onFinish()} onDelete={handleDelete} disabled={inputDisabled} letterStates={computeLetterStates(answers)}
+      />
     </div>
   );
 }

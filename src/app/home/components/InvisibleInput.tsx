@@ -33,7 +33,7 @@ export default function InvisibleInput({text, handleTextChange, onEnter, disable
 
   return (
     <div
-      className="relative w-full h-screen flex flex-col items-center justify-center"
+      className="relative w-full flex flex-col items-center justify-center"
       onClick={() => inputRef.current?.focus()}
     >
       <input
@@ -46,7 +46,6 @@ export default function InvisibleInput({text, handleTextChange, onEnter, disable
         className="absolute opacity-0 pointer-events-none"
         autoFocus
       />
-      <p className="text-xl font-mono">{text ? "..." :  "Start typing..."}</p>
     </div>
   );
 }
