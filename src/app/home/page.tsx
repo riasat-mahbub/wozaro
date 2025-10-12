@@ -22,7 +22,7 @@ export default function Home() {
     }
     return(
         <div>
-            <BoxGrid/>
+            <BoxGrid text={text}/>
             <InvisibleInput text={text} handleTextChange={handleTextChange} onEnter={onFinish}/>
         </div>
     )
