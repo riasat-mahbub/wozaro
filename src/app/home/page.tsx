@@ -16,6 +16,7 @@ export default function Home() {
     const [currentRow, setCurrentRow]  = useState<number>(0);
     const [text, setText] = useState<string>("");
     const [todaysAnswer, setTodaysAnswer] = useState("")
+    const [inputDisabled, setInputDisabled] = useState(false)
 
     useEffect( () =>{
         const ans = generateTodaysAnswer()
@@ -23,7 +24,6 @@ export default function Home() {
         console.log(ans)
     }, [])
 
-    const inputDisabled = currentRow >=MAX_ROW
 
 
     const handleTextChange = (changedText: string) =>{
@@ -31,7 +31,7 @@ export default function Home() {
         
         setText(changedText)
         changeAnswer(changedText)
-        if(text.length > MAX_COLS){
+        if(changedText.length > MAX_COLS){
             onFinish();
         }
 
@@ -48,14 +48,21 @@ export default function Home() {
 
     const onFinish = () =>{
         if(inputDisabled || text.length === 0) return
+
+        if(answers[currentRow] === todaysAnswer){
+            setInputDisabled(true)
+            console.log("WINNer")
+        }else if(currentRow >=MAX_ROW-1){
+            setInputDisabled(true)
+            console.log("LOSER")
+        }
         
-        if(currentRow <=MAX_ROW+1){
+        if(currentRow < MAX_ROW -1){
             setCurrentRow(currentRow + 1);
         }else{
             setCurrentRow(MAX_ROW)
         }
         setText("")
-         
     }
     return(
         <div>
