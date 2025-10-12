@@ -1,33 +1,21 @@
 "use client"
-import { Box } from "@/app/types/Box";
-import { SingleBox } from "./Box"
 import { useEffect, useState } from "react";
+import BoxRow from "./BoxRow";
 
 interface BoxGridProps{
-    text: string;
+    answers: string[];
+    numRow: number;
+    numCol: number;
 }
 
 
-export const BoxGrid = ({text}: BoxGridProps) =>{
-    const [boxes, setBoxes] = useState<Box[]>((() =>
-        Array(25).fill({ letter: "", bg: "transparent" })
-    ))
-
-    useEffect( () =>{
-        const updatedBoxes = boxes.map((box, i) => ({
-            ...box,
-            letter: text[i] || "",
-        }));
-
-        setBoxes(updatedBoxes);
-        console.log(boxes)
-    }, [text])
+export const BoxGrid = ({answers, numRow, numCol}: BoxGridProps) =>{
 
     return(
         <div className="w-full flex justify-center">
-            <div className="grid grid-cols-5 justify-center items-center w-[31rem] h-[31rem] mt-10">
-                {boxes.map( (val, idx) =>(
-                    <SingleBox key={idx} letter={val.letter} bg={val.bg}/>
+            <div className={`flex flex-col justify-center items-center w-[31rem] h-[31rem] mt-10`}>
+                {answers.map( (answer, idx) =>(
+                    <BoxRow key={idx} answer={answer} numCol={numCol}/>
                 ))}
             </div>
         </div>
