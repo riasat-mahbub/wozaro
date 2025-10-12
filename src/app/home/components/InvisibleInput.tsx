@@ -22,7 +22,7 @@ export default function InvisibleInput({text, handleTextChange, onEnter, disable
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    handleTextChange(e.target.value)
+    handleTextChange(e.target.value.toLowerCase())
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) =>{
