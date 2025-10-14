@@ -35,9 +35,17 @@ export default function Bee(){
             </div>
 
             <div className="flex flex-row gap-5 justify-center items-center w-screen">
-                <div className="rounded-full-bg-white text-3xl border-3 border-black rounded-full p-4 " onClick={submitAns}>Submit</div>
-                <RotateCcw size={48} onClick={() => setCurrentAns("")}/>
-                <div className="rounded-full-bg-white text-3xl border-3 border-black rounded-full p-4 " onClick={() => setCurrentAns(currentAns.substring(0,currentAns.length-1))}>Delete</div>
+                <div className="rounded-full-bg-white text-3xl border-3 border-black rounded-full p-4 
+                    cursor-pointer select-none transform transition-transform duration-150 active:scale-90 active:shadow-inner"
+                    onClick={submitAns}>
+                        Submit
+                </div>
+                <RotateCcw className="cursor-pointer select-none transform transition-transform duration-150 active:scale-90 active:shadow-inner" size={48} onClick={() => setCurrentAns("")}/>
+                <div className="rounded-full-bg-white text-3xl border-3 border-black rounded-full p-4 
+                    cursor-pointer select-none transform transition-transform duration-150 active:scale-90 active:shadow-inner"
+                    onClick={() => setCurrentAns(currentAns.substring(0,currentAns.length-1))}>
+                        Delete
+                </div>
             </div>
         </div>
     )
