@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { SpellCollection } from "./types/Spell"
 import SpellGrid from "./components/SpellGrid"
 import { RotateCcw } from "lucide-react"
+import WordDisplay from "./components/WordDisplay"
 
 
 export default function Bee(){
@@ -28,14 +29,15 @@ export default function Bee(){
     }, [currentAns])
     return(
         <div>
-            <div className="flex justify-center items-end w-screen h-[50vh]">
+            <WordDisplay word={currentAns}/>
+            <div className="flex justify-center items-end w-screen mt-40 mb-32">
                 <SpellGrid spellCollection={spellCollection} letterPress={letterPress}/>
             </div>
 
             <div className="flex flex-row gap-5 justify-center items-center w-screen">
                 <div className="rounded-full-bg-white text-3xl border-3 border-black rounded-full p-4 " onClick={submitAns}>Submit</div>
                 <RotateCcw size={48} onClick={() => setCurrentAns("")}/>
-                <div className="rounded-full-bg-white text-3xl border-3 border-black rounded-full p-4 " onClick={() => setCurrentAns(currentAns.substring(0,currentAns.length-2))}>Delete</div>
+                <div className="rounded-full-bg-white text-3xl border-3 border-black rounded-full p-4 " onClick={() => setCurrentAns(currentAns.substring(0,currentAns.length-1))}>Delete</div>
             </div>
         </div>
     )
