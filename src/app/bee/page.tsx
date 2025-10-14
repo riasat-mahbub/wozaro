@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { SpellCollection } from "./types/Spell"
 import SpellGrid from "./components/SpellGrid"
+import { RotateCcw } from "lucide-react"
 
 
 export default function Bee(){
@@ -10,12 +11,13 @@ export default function Bee(){
     const [spellCollection, setSpellCollection] = useState<SpellCollection>(new SpellCollection("CYDMIOT", "T"))
     const [currentAns, setCurrentAns] = useState("")
 
-    const letterPress = (letter:string) =>{
+    const letterPress = (letter:string):void =>{
         setCurrentAns(currentAns+letter)
     }
 
     const submitAns = () =>{
         spellCollection.addAnswer(currentAns)
+        console.log(currentAns)
         setCurrentAns("")
     }
 
@@ -25,9 +27,16 @@ export default function Bee(){
         }
     }, [currentAns])
     return(
-        <div className="flex items-center justify-center w-screen h-screen">
+        <div>
+            <div className="flex justify-center items-end w-screen h-[50vh]">
+                <SpellGrid spellCollection={spellCollection} letterPress={letterPress}/>
+            </div>
 
-            <SpellGrid spellCollection={spellCollection}/>
+            <div className="flex flex-row gap-5 justify-center items-center w-screen">
+                <div className="rounded-full-bg-white text-3xl border-3 border-black rounded-full p-4 " onClick={submitAns}>Submit</div>
+                <RotateCcw size={48} onClick={() => setCurrentAns("")}/>
+                <div className="rounded-full-bg-white text-3xl border-3 border-black rounded-full p-4 " onClick={() => setCurrentAns(currentAns.substring(0,currentAns.length-2))}>Delete</div>
+            </div>
         </div>
     )
 

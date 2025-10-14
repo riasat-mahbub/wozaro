@@ -5,10 +5,11 @@ import SpellBlock from "./SpellBlock"
 
 
 interface SpellGridProps{
-    spellCollection: SpellCollection
+    spellCollection: SpellCollection;
+    letterPress: (letter:string) => void
 }
 
-export default function SpellGrid({spellCollection}: SpellGridProps){
+export default function SpellGrid({spellCollection, letterPress}: SpellGridProps){
 
     const mainLetter = spellCollection.spellLetters.find(l => l.isMain)
     const outerLetters = spellCollection.spellLetters.filter(l => !l.isMain)
@@ -17,7 +18,7 @@ export default function SpellGrid({spellCollection}: SpellGridProps){
 
     return(
         <div className="relative w-full h-full flex items-center justify-center">
-            {mainLetter && <SpellBlock spellLetter={mainLetter} />}
+            {mainLetter && <SpellBlock spellLetter={mainLetter} letterPress={letterPress}/>}
 
             {outerLetters.map((val, idx) => {
                 const angle = ((idx / 6) * 2 * Math.PI) - Math.PI / 2; // 60° steps, start at top
@@ -32,7 +33,7 @@ export default function SpellGrid({spellCollection}: SpellGridProps){
                     transform: `translate(${x}px, ${y}px)`,
                     }}
                 >
-                    <SpellBlock spellLetter={val} />
+                    <SpellBlock spellLetter={val} letterPress={letterPress}/>
                 </div>
                 );
             })}
