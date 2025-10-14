@@ -8,7 +8,7 @@ export interface SpellLetter{
 
 export class SpellCollection{
     spellLetters: SpellLetter[] = [];
-    submittedAnswers: string[] = []
+    submittedAnswers: Set<string> = new Set<string>();
 
     constructor(text: string, mainLetter: string){
         if(text.length !== 7){
@@ -25,5 +25,9 @@ export class SpellCollection{
             this.spellLetters.push({letter: letter, isMain: mainLetter===letter})
         })
 
+    }
+
+    public addAnswer(answer: string):void{
+        this.submittedAnswers.add(answer)
     }
 }
