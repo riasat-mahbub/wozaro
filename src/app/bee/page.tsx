@@ -5,7 +5,8 @@ import { SpellCollection } from "./types/Spell"
 import SpellGrid from "./components/SpellGrid"
 import { RotateCcw } from "lucide-react"
 import WordDisplay from "./components/WordDisplay"
-import { toast, ToastContainer } from "react-toastify"
+import { toast, ToastContainer, ToastOptions } from "react-toastify"
+import InvisibleInput from "./components/InvisibleInput"
 
 
 export default function Bee(){
@@ -84,21 +85,39 @@ export default function Bee(){
 
 
     const letterPress = (letter:string):void =>{
-        setCurrentAns(currentAns+letter)
+        if(spellCollection.letters.has(letter.toLowerCase())){
+            setCurrentAns(currentAns+letter.toLowerCase())
+        }
     }
 
+    const handleTextChange = (text:string) =>{
+        const textSet = new Set(text)
+        if(textSet.isSubsetOf(spellCollection.letters)){
+            setCurrentAns(text)
+        }
+    } 
+
+    const toastMsg = (message: string, type:"error" | "success" = "success") =>{
+        const toastOptions:ToastOptions = { position: "bottom-center", autoClose: 2500, hideProgressBar: true, closeOnClick: true}
+        const typeToToast = {
+            "error" :  () => toast.error(message, toastOptions),
+            "success": () => toast.success("Great +"+ currentAns.length.toString(), toastOptions)
+        }
+
+        typeToToast[type]?.()
+    }
 
     const submitAns = () =>{
         if(currentAns.length < MIN_LEN){
-            toast.error("Too Short", { position: "bottom-center", autoClose: 2500, hideProgressBar: true, closeOnClick: true})
+            toastMsg("Too Short","error")
         }else if(spellCollection.submittedAnswers.has(currentAns)){
-            toast.error("Already Done", { position: "bottom-center", autoClose: 2500, hideProgressBar: true, closeOnClick: true})
+            toastMsg("Already Done","error")
         }else if(answers.includes(currentAns)){
-            toast.success("Great +"+ currentAns.length.toString(), { position: "bottom-center", autoClose: 2500, hideProgressBar: true, closeOnClick: true})        
+            toastMsg("Great +"+ currentAns.length.toString(),"success")    
             spellCollection.addAnswer(currentAns.toLowerCase())
             setScore(score+currentAns.length)
         }else{
-            toast.error("Not on the word list", { position: "bottom-center", autoClose: 2500, hideProgressBar: true, closeOnClick: true})
+            toastMsg("Not on the word list","error")
         }
         setCurrentAns("")
     }
@@ -128,6 +147,7 @@ export default function Bee(){
                         Submit
                 </div>
             </div>
+            <InvisibleInput text={currentAns} handleTextChange={handleTextChange} onEnter={submitAns} />
             <ToastContainer  position="bottom-center" autoClose={2500} hideProgressBar={true} draggable/>
         </div>
     )
