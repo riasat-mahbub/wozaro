@@ -5,6 +5,7 @@ import { SpellCollection } from "./types/Spell"
 import SpellGrid from "./components/SpellGrid"
 import { RotateCcw } from "lucide-react"
 import WordDisplay from "./components/WordDisplay"
+import { toast, ToastContainer } from "react-toastify"
 
 
 export default function Bee(){
@@ -12,10 +13,17 @@ export default function Bee(){
     const MIN_LEN = 4
     const MAX_LEN = 14
     const LETTER_COUNT = 7;
-    
+
+    const [spellCollection, setSpellCollection] = useState<SpellCollection>(new SpellCollection())
+    const [currentAns, setCurrentAns] = useState("")
+    const [answers, setAnswers] = useState<string[]>([])
+    const [score, setScore] = useState<number>(0)
+    const [snackbar, setSnackbar] = useState()
+
+
     const getRandomLetters = () =>{
         const weightedLetters = ( 'EEEEEEEEEEEE' + 'AAAAAAAAA' + 'IIIIIIII' + 'OOOOOOOO' + // Vowels
-        'NNNNNNR' + 'RRRRR' + 'TTTTTT' + 'LLLL' + 'SSSS' + // Common consonants
+        'NNNNNNN' + 'RRRRR' + 'TTTTTT' + 'LLLL' + 'SSSS' + // Common consonants
         'DDDD' + 'GGGG' + 'BBCCMMUU' +
         'FFHHVVWWYY' + 'JKQXZ').split('');
 
@@ -33,14 +41,6 @@ export default function Bee(){
 
         return randomLetters.values().toArray().join("");
     }
-
-
-    const [spellCollection, setSpellCollection] = useState<SpellCollection>(new SpellCollection())
-    const [currentAns, setCurrentAns] = useState("")
-
-
-    const [answers, setAnswers] = useState<string[]>([])
-
 
 
     useEffect( () =>{
@@ -89,8 +89,17 @@ export default function Bee(){
 
 
     const submitAns = () =>{
-        spellCollection.addAnswer(currentAns.toLowerCase())
-        console.log(currentAns)
+        if(currentAns.length < MIN_LEN){
+            toast.error("Too Short", { position: "bottom-center", autoClose: 2500, hideProgressBar: true, closeOnClick: true})
+        }else if(spellCollection.submittedAnswers.has(currentAns)){
+            toast.error("Already Done", { position: "bottom-center", autoClose: 2500, hideProgressBar: true, closeOnClick: true})
+        }else if(answers.includes(currentAns)){
+            toast.success("Great +"+ currentAns.length.toString(), { position: "bottom-center", autoClose: 2500, hideProgressBar: true, closeOnClick: true})        
+            spellCollection.addAnswer(currentAns.toLowerCase())
+            setScore(score+currentAns.length)
+        }else{
+            toast.error("Not on the word list", { position: "bottom-center", autoClose: 2500, hideProgressBar: true, closeOnClick: true})
+        }
         setCurrentAns("")
     }
 
@@ -119,6 +128,7 @@ export default function Bee(){
                         Delete
                 </div>
             </div>
+            <ToastContainer  position="bottom-center" autoClose={2500} hideProgressBar={true} draggable/>
         </div>
     )
 
