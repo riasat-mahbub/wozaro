@@ -11,14 +11,13 @@ interface SpellGridProps{
 
 export default function SpellGrid({spellCollection, letterPress}: SpellGridProps){
 
-    const mainLetter = spellCollection.spellLetters.find(l => l.isMain)
-    const outerLetters = spellCollection.spellLetters.filter(l => !l.isMain)
+    const outerLetters = [...spellCollection.letters.values()].filter(letter => letter!=spellCollection.mainLetter)
 
     const radius = Math.sqrt(3) * 70;
 
     return(
         <div className="relative w-full h-full flex items-center justify-center">
-            {mainLetter && <SpellBlock spellLetter={mainLetter} letterPress={letterPress}/>}
+            {spellCollection.mainLetter && <SpellBlock letter={spellCollection.mainLetter} isMain={true} letterPress={letterPress}/>}
 
             {outerLetters.map((val, idx) => {
                 const angle = ((idx / 6) * 2 * Math.PI) - Math.PI / 2; // 60° steps, start at top
@@ -33,7 +32,7 @@ export default function SpellGrid({spellCollection, letterPress}: SpellGridProps
                     transform: `translate(${x}px, ${y}px)`,
                     }}
                 >
-                    <SpellBlock spellLetter={val} letterPress={letterPress}/>
+                    <SpellBlock letter={val}  isMain={false} letterPress={letterPress}/>
                 </div>
                 );
             })}

@@ -8,16 +8,88 @@ import WordDisplay from "./components/WordDisplay"
 
 
 export default function Bee(){
+
+    const MIN_LEN = 4
+    const MAX_LEN = 14
+    const LETTER_COUNT = 7;
     
-    const [spellCollection, setSpellCollection] = useState<SpellCollection>(new SpellCollection("CYDMIOT", "T"))
+    const getRandomLetters = () =>{
+        const weightedLetters = ( 'EEEEEEEEEEEE' + 'AAAAAAAAA' + 'IIIIIIII' + 'OOOOOOOO' + // Vowels
+        'NNNNNNR' + 'RRRRR' + 'TTTTTT' + 'LLLL' + 'SSSS' + // Common consonants
+        'DDDD' + 'GGGG' + 'BBCCMMUU' +
+        'FFHHVVWWYY' + 'JKQXZ').split('');
+
+        const randomLetters:Set<string> = new Set<string>();
+
+        let i = 0;
+        while(i<LETTER_COUNT){
+            const randomIndex = Math.floor(Math.random() * weightedLetters.length);
+            const letter = weightedLetters[randomIndex].toLowerCase();
+            if(!randomLetters.has(letter)){
+                randomLetters.add(letter)
+                ++i;
+            }
+        }
+
+        return randomLetters.values().toArray().join("");
+    }
+
+
+    const [spellCollection, setSpellCollection] = useState<SpellCollection>(new SpellCollection())
     const [currentAns, setCurrentAns] = useState("")
+
+
+    const [answers, setAnswers] = useState<string[]>([])
+
+
+
+    useEffect( () =>{
+        const randomLetters = getRandomLetters()
+        setSpellCollection(new SpellCollection(randomLetters, randomLetters.charAt(Math.random() * LETTER_COUNT)))
+    }, [])
+
+    useEffect( () =>{
+        const generateAnswer = () =>{
+            const data = Object.keys(require('./data/dictionary.json'))
+            const letters = [...spellCollection.letters.values()]
+            const filteredData = data.filter( (word) => {
+                word = word.toLowerCase()
+                if(word.length < MIN_LEN || word.length > MAX_LEN){
+                    return false;
+                }else if(word.includes(spellCollection.mainLetter)){
+                    for(let i=0;i<word.length;++i){
+                        if(!letters.includes(word[i])){
+                            return false;
+                        }
+                    }
+                    return true
+                }else{
+                    return false;
+                }
+            })
+            return filteredData
+        }
+
+        const answers = generateAnswer()
+
+        if(answers.length < 20){
+            const randomLetters = getRandomLetters()
+            setSpellCollection(new SpellCollection(randomLetters, randomLetters.charAt(Math.random() * LETTER_COUNT)))
+        }else{
+            console.log(answers)
+            setAnswers(answers)
+        }
+
+    }, [spellCollection])
+
 
     const letterPress = (letter:string):void =>{
         setCurrentAns(currentAns+letter)
     }
 
+
     const submitAns = () =>{
-        spellCollection.addAnswer(currentAns)
+        spellCollection.addAnswer(currentAns.toLowerCase())
         console.log(currentAns)
         setCurrentAns("")
     }
