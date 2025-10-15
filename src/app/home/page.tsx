@@ -22,7 +22,6 @@ export default function Home(){
             <div className="absolute bottom-1/4 right-1/4 w-10 h-10 bg-green-300 opacity-20 sm:w-14 sm:h-14" style={{clipPath: "polygon(50% 0%, 0% 100%, 100% 100%)"}}></div>
             
             {/* Small “hat” shapes (like tiny jester hats) */}
-            <div className="absolute top-1/3 left-1/2 w-10 h-10 bg-yellow-400 opacity-30 sm:w-14 sm:h-14 rounded-t-full rotate-[-20deg]"></div>
             <div className="absolute bottom-1/5 right-1/2 w-12 h-12 bg-red-400 opacity-25 sm:w-16 sm:h-16 rounded-t-full rotate-[15deg]"></div>
 
             {/* Page content */}
