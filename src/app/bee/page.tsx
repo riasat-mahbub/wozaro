@@ -145,32 +145,37 @@ export default function Bee(){
         }
     }, [currentAns])
     return(
-        <div>
-            <div className="w-1/2 mx-auto">
-                <ProgressBar score={score}/>
-            </div>
-            <WordDisplay word={currentAns} mainLetter={spellCollection.mainLetter}/>
-            <div className="flex justify-center items-end w-screen mt-40 mb-32">
-                <SpellGrid spellCollection={spellCollection} letterPress={letterPress}/>
-            </div>
+    <div className="min-h-screen flex flex-col items-center justify-between gap-6 px-4 py-6 sm:py-10 bg-gradient-to-b from-gray-50 to-gray-100  transition-all duration-300">
+      <div className="w-full sm:w-3/4 md:w-1/2">
+        <ProgressBar score={score} />
+      </div>
 
-            <div className="flex flex-row gap-5 justify-center items-center w-screen">
-                <div className="rounded-full-bg-white text-3xl border-3 border-black rounded-full p-4 
-                    cursor-pointer select-none transform transition-transform duration-150 active:scale-90 active:shadow-inner"
-                    onClick={() => setCurrentAns(currentAns.substring(0,currentAns.length-1))}>
-                        Delete
-                </div>
-                <RotateCcw className="cursor-pointer select-none transform transition-transform duration-150 active:scale-90 active:shadow-inner" size={48} onClick={() => setCurrentAns("")}/>
-                <div className="rounded-full-bg-white text-3xl border-3 border-black rounded-full p-4 
-                    cursor-pointer select-none transform transition-transform duration-150 active:scale-90 active:shadow-inner"
-                    onClick={submitAns}>
-                        Submit
-                </div>
-            </div>
-            <AnsDisplay answers={Array.from(spellCollection.submittedAnswers.values())}/>
-            <InvisibleInput text={currentAns} handleTextChange={handleTextChange} onEnter={submitAns} disabled={disabled}/>
-            <ToastContainer  position="bottom-center" autoClose={2500} hideProgressBar={true} draggable/>
-        </div>
+      <WordDisplay word={currentAns} mainLetter={spellCollection.mainLetter} />
+
+      <div className="flex justify-center items-end w-full mt-10 sm:mt-16 mb-20 sm:mb-24">
+        <SpellGrid spellCollection={spellCollection} letterPress={letterPress}/>
+      </div>
+
+      <div className="flex flex-wrap gap-4 justify-center items-center w-full sm:w-auto mt-10">
+        <button className="bg-white border border-gray-300 text-lg sm:text-xl px-5 py-3 rounded-full shadow-md hover:shadow-lg active:scale-95 transition-transform" onClick={() => setCurrentAns(currentAns.substring(0, currentAns.length - 1))}>
+          Delete
+        </button>
+
+        <RotateCcw className="cursor-pointer p-3 rounded-full bg-white  border border-gray-300 hover:shadow-lg active:scale-95 transition-transform" size={48} onClick={() => setCurrentAns("")}/>
+
+        <button className="bg-indigo-500 hover:bg-indigo-600 text-white text-lg sm:text-xl px-6 py-3 rounded-full shadow-md active:scale-95 transition-transform" onClick={submitAns}>
+          Submit
+        </button>
+      </div>
+
+      <div className="w-full sm:w-3/4 md:w-1/2">
+        <AnsDisplay answers={Array.from(spellCollection.submittedAnswers.values())}/>
+      </div>
+
+      <InvisibleInput text={currentAns} handleTextChange={handleTextChange} onEnter={submitAns} disabled={disabled}/>
+
+        <ToastContainer position="bottom-center" autoClose={2500} hideProgressBar draggable/>
+    </div>
     )
 
 }
