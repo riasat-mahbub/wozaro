@@ -1,13 +1,14 @@
-import React, { useEffect, useRef, useState} from "react";
+import React, { useEffect, useRef} from "react";
 
 interface InvisibleInputProps {
     text:string;
-    handleTextChange: (text:string) => void
-    onEnter: () => void
+    handleTextChange: (text:string) => void;
+    onEnter: () => void;
+    disabled: boolean;
 }
 
 
-export default function InvisibleInput({text, handleTextChange, onEnter} : InvisibleInputProps) {
+export default function InvisibleInput({text, handleTextChange, onEnter, disabled} : InvisibleInputProps) {
   
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -39,6 +40,7 @@ export default function InvisibleInput({text, handleTextChange, onEnter} : Invis
         ref={inputRef}
         type="text"
         value={text}
+        disabled={disabled}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         className="absolute opacity-0 pointer-events-none"

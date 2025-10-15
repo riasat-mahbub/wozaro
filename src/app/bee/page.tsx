@@ -21,7 +21,7 @@ export default function Bee(){
     const [currentAns, setCurrentAns] = useState("")
     const [answers, setAnswers] = useState<string[]>([])
     const [score, setScore] = useState<number>(0)
-    const [snackbar, setSnackbar] = useState()
+    const [disabled, setDisabled] = useState(false)
 
 
     const getRandomLetters = () =>{
@@ -92,9 +92,16 @@ export default function Bee(){
 
     }, [spellCollection])
 
+    useEffect( () =>{
+        if(score>=MAX_SCORE){
+            console.log("You have won")
+            setDisabled(true)
+        }
+    }, [score])
+
 
     const letterPress = (letter:string):void =>{
-        if(spellCollection.letters.has(letter.toLowerCase())){
+        if(spellCollection.letters.has(letter.toLowerCase()) && !disabled){
             setCurrentAns(currentAns+letter.toLowerCase())
         }
     }
@@ -141,7 +148,7 @@ export default function Bee(){
             <div className="w-1/2 mx-auto">
                 <ProgressBar score={score}/>
             </div>
-            <WordDisplay word={currentAns}/>
+            <WordDisplay word={currentAns} mainLetter={spellCollection.mainLetter}/>
             <div className="flex justify-center items-end w-screen mt-40 mb-32">
                 <SpellGrid spellCollection={spellCollection} letterPress={letterPress}/>
             </div>
@@ -159,7 +166,7 @@ export default function Bee(){
                         Submit
                 </div>
             </div>
-            <InvisibleInput text={currentAns} handleTextChange={handleTextChange} onEnter={submitAns} />
+            <InvisibleInput text={currentAns} handleTextChange={handleTextChange} onEnter={submitAns} disabled={disabled}/>
             <ToastContainer  position="bottom-center" autoClose={2500} hideProgressBar={true} draggable/>
         </div>
     )
