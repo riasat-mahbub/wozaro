@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { SpellCollection } from "./types/Spell"
 import SpellGrid from "./components/SpellGrid"
 import { RotateCcw } from "lucide-react"
@@ -23,6 +23,9 @@ export default function Bee(){
     const [score, setScore] = useState<number>(0);
     const [disabled, setDisabled] = useState(false);
 
+
+    const hiveShapes = useRef<{top: string, left: string, rotate: string}[]>([]);
+
     const getRandomLetters = () =>{
         const weightedLetters = ('EEEEEEEEEEEE'+'AAAAAAAAA'+'IIIIIIII'+'OOOOOOOO'+
         'NNNNNNN'+'RRRRR'+'TTTTTT'+'LLLL'+'SSSS'+
@@ -44,6 +47,12 @@ export default function Bee(){
     useEffect(() =>{
         const randomLetters = getRandomLetters();
         setSpellCollection(new SpellCollection(randomLetters, randomLetters.charAt(Math.random() * LETTER_COUNT)));
+        hiveShapes.current = Array.from({ length: 10 }).map(() => ({
+            top: `${Math.random() * 100}%`,
+            left: `${Math.random() * 100}%`,
+            rotate: `${Math.random() * 360}deg`,
+        }));
+        
     }, []);
 
     useEffect(() =>{
@@ -72,7 +81,7 @@ export default function Bee(){
 
         const answers = generateAnswer();
         const totalScore = getTotalScore(answers);
-        if(totalScore < MAX_SCORE){
+        if(totalScore < MAX_SCORE*2){
             const randomLetters = getRandomLetters();
             setSpellCollection(new SpellCollection(randomLetters, randomLetters.charAt(Math.random() * LETTER_COUNT)));
         } else {
@@ -133,17 +142,10 @@ export default function Bee(){
     return(
     <div className="min-h-screen flex flex-col items-center justify-between gap-6 px-4 py-6 sm:py-10 bg-yellow-50 relative overflow-hidden transition-all duration-300">
 
-        {/* Hive background (hexagons) */}
-        <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
-            {Array.from({length: 10}).map((_, i) => (
-                <div key={i} className={`absolute w-16 h-16 sm:w-24 sm:h-24 bg-yellow-200 border-2 border-yellow-400 rounded-[20%] opacity-20`}
-                     style={{
-                        top: `${Math.random()*100}%`,
-                        left: `${Math.random()*100}%`,
-                        transform: `rotate(${Math.random()*360}deg)`
-                     }} />
-            ))}
-        </div>
+        {hiveShapes.current.map((shape, i) => (
+            <div key={i} className="absolute w-16 h-16 sm:w-24 sm:h-24 bg-yellow-200 border-2 border-yellow-400 rounded-[20%] opacity-20"
+                style={{ top: shape.top, left: shape.left, transform: `rotate(${shape.rotate})` }} />
+        ))}
 
         {/* Progress bar */}
         <div className="w-full sm:w-3/4 md:w-1/2 z-10">

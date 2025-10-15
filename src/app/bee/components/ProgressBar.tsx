@@ -13,7 +13,7 @@ export default function ProgressBar({score}: ProgressBarProps){
 
             {
                 score > 0 &&
-                <div className="absolute flex flex-col justify-center items-center -mt-10 -ml-3" style={{left: score + "%"}}>
+                <div className="absolute flex flex-col justify-center items-center -mt-12 -ml-1" style={{left: score + "%"}}>
                     <p className="-mb-3">{score}</p>
                     <ChevronDown/>
                 </div>
