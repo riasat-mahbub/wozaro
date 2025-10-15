@@ -19,7 +19,7 @@ export default function LinkCard({ title, description, href, image }: LinkCardPr
       <div className="flex flex-col h-full justify-between">
 
         {image && (
-            <div className="relative w-full h-40 sm:h-48 overflow-hidden">
+            <div className="relative w-full h-48 sm:h-56 overflow-hidden mb-12">
                 <Image src={image} alt={title} fill className="object-cover transition-transform duration-500 hover:scale-105" sizes="(max-width: 640px) 100vw, 50vw"/>
             </div>
         )}
