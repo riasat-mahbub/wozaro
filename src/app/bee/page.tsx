@@ -8,6 +8,7 @@ import WordDisplay from "./components/WordDisplay"
 import { toast, ToastContainer, ToastOptions } from "react-toastify"
 import InvisibleInput from "./components/InvisibleInput"
 import ProgressBar from "./components/ProgressBar"
+import AnsDisplay from "./components/AnsDisplay"
 
 
 export default function Bee(){
@@ -166,6 +167,7 @@ export default function Bee(){
                         Submit
                 </div>
             </div>
+            <AnsDisplay answers={Array.from(spellCollection.submittedAnswers.values())}/>
             <InvisibleInput text={currentAns} handleTextChange={handleTextChange} onEnter={submitAns} disabled={disabled}/>
             <ToastContainer  position="bottom-center" autoClose={2500} hideProgressBar={true} draggable/>
         </div>
