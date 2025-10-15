@@ -1,7 +1,7 @@
 "use client";
 
 import BoxRow from "./BoxRow";
-import { Answer } from "@/app/types/Answer";
+import { Answer } from "@/app/home/types/Answer";
 
 interface BoxGridProps {
   answers: Answer[];

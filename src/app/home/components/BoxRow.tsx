@@ -1,7 +1,7 @@
 "use client";
 
 import { Box } from "./Box";
-import { Answer } from "@/app/types/Answer";
+import { Answer } from "@/app/home/types/Answer";
 
 interface BoxRowProps {
   answer: Answer;

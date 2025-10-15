@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { BoxGrid } from "./components/BoxGrid";
 import InvisibleInput from "./components/InvisibleInput";
 import { generateTodaysAnswer } from "./data/todaysAnswer";
-import { Answer } from "../types/Answer";
+import { Answer } from "./types/Answer";
 import OnScreenKeyboard from "./components/OnScreenKeyboard";
 
 export default function Home() {
