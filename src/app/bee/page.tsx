@@ -10,109 +10,95 @@ import InvisibleInput from "./components/InvisibleInput"
 import ProgressBar from "./components/ProgressBar"
 import AnsDisplay from "./components/AnsDisplay"
 
-
 export default function Bee(){
 
-    const MIN_LEN = 4
-    const MAX_LEN = 14
+    const MIN_LEN = 4;
+    const MAX_LEN = 14;
     const LETTER_COUNT = 7;
-    const MAX_SCORE=  100
+    const MAX_SCORE=  100;
 
-    const [spellCollection, setSpellCollection] = useState<SpellCollection>(new SpellCollection())
-    const [currentAns, setCurrentAns] = useState("")
-    const [answers, setAnswers] = useState<string[]>([])
-    const [score, setScore] = useState<number>(0)
-    const [disabled, setDisabled] = useState(false)
-
+    const [spellCollection, setSpellCollection] = useState<SpellCollection>(new SpellCollection());
+    const [currentAns, setCurrentAns] = useState("");
+    const [answers, setAnswers] = useState<string[]>([]);
+    const [score, setScore] = useState<number>(0);
+    const [disabled, setDisabled] = useState(false);
 
     const getRandomLetters = () =>{
-        const weightedLetters = ( 'EEEEEEEEEEEE' + 'AAAAAAAAA' + 'IIIIIIII' + 'OOOOOOOO' + // Vowels
-        'NNNNNNN' + 'RRRRR' + 'TTTTTT' + 'LLLL' + 'SSSS' + // Common consonants
-        'DDDD' + 'GGGG' + 'BBCCMMUU' +
-        'FFHHVVWWYY' + 'JKQXZ').split('');
+        const weightedLetters = ('EEEEEEEEEEEE'+'AAAAAAAAA'+'IIIIIIII'+'OOOOOOOO'+
+        'NNNNNNN'+'RRRRR'+'TTTTTT'+'LLLL'+'SSSS'+
+        'DDDD'+'GGGG'+'BBCCMMUU'+'FFHHVVWWYY'+'JKQXZ').split('');
 
         const randomLetters:Set<string> = new Set<string>();
-
         let i = 0;
         while(i<LETTER_COUNT){
             const randomIndex = Math.floor(Math.random() * weightedLetters.length);
             const letter = weightedLetters[randomIndex].toLowerCase();
             if(!randomLetters.has(letter)){
-                randomLetters.add(letter)
+                randomLetters.add(letter);
                 ++i;
             }
         }
-
         return randomLetters.values().toArray().join("");
     }
 
+    useEffect(() =>{
+        const randomLetters = getRandomLetters();
+        setSpellCollection(new SpellCollection(randomLetters, randomLetters.charAt(Math.random() * LETTER_COUNT)));
+    }, []);
 
-    useEffect( () =>{
-        const randomLetters = getRandomLetters()
-        setSpellCollection(new SpellCollection(randomLetters, randomLetters.charAt(Math.random() * LETTER_COUNT)))
-    }, [])
-
-    useEffect( () =>{
+    useEffect(() =>{
         const generateAnswer = () =>{
-            const data = Object.keys(require('./data/dictionary.json'))
-            const letters = [...spellCollection.letters.values()]
+            const data = Object.keys(require('./data/dictionary.json'));
+            const letters = [...spellCollection.letters.values()];
             const filteredData = data.filter( (word) => {
-                word = word.toLowerCase()
-                if(word.length < MIN_LEN || word.length > MAX_LEN){
-                    return false;
-                }else if(word.includes(spellCollection.mainLetter)){
+                word = word.toLowerCase();
+                if(word.length < MIN_LEN || word.length > MAX_LEN) return false;
+                if(word.includes(spellCollection.mainLetter)){
                     for(let i=0;i<word.length;++i){
-                        if(!letters.includes(word[i])){
-                            return false;
-                        }
+                        if(!letters.includes(word[i])) return false;
                     }
-                    return true
-                }else{
-                    return false;
+                    return true;
                 }
-            })
-            return filteredData
+                return false;
+            });
+            return filteredData;
         }
 
         const getTotalScore = (answers: string[]) =>{
             let totalScore = 0;
-            answers.forEach( val =>{
-                totalScore+=val.length
-            })
+            answers.forEach(val => totalScore += val.length);
             return totalScore;
         }
 
-        const answers = generateAnswer()
-        const totalScore = getTotalScore(answers)
+        const answers = generateAnswer();
+        const totalScore = getTotalScore(answers);
         if(totalScore < MAX_SCORE){
-            const randomLetters = getRandomLetters()
-            setSpellCollection(new SpellCollection(randomLetters, randomLetters.charAt(Math.random() * LETTER_COUNT)))
-        }else{
-            setAnswers(answers)
+            const randomLetters = getRandomLetters();
+            setSpellCollection(new SpellCollection(randomLetters, randomLetters.charAt(Math.random() * LETTER_COUNT)));
+        } else {
+            setAnswers(answers);
         }
+    }, [spellCollection]);
 
-    }, [spellCollection])
-
-    useEffect( () =>{
+    useEffect(() =>{
         if(score>=MAX_SCORE){
-            console.log("You have won")
-            setDisabled(true)
+            console.log("You have won");
+            setDisabled(true);
         }
-    }, [score])
-
+    }, [score]);
 
     const letterPress = (letter:string):void =>{
         if(spellCollection.letters.has(letter.toLowerCase()) && !disabled){
-            setCurrentAns(currentAns+letter.toLowerCase())
+            setCurrentAns(currentAns+letter.toLowerCase());
         }
     }
 
     const handleTextChange = (text:string) =>{
-        const textSet = new Set(text)
+        const textSet = new Set(text);
         if(textSet.isSubsetOf(spellCollection.letters)){
-            setCurrentAns(text)
+            setCurrentAns(text);
         }
-    } 
+    }
 
     const toastMsg = (message: string, type:"error" | "success" = "success") =>{
         const toastOptions:ToastOptions = { position: "bottom-center", autoClose: 2500, hideProgressBar: true, closeOnClick: true}
@@ -120,7 +106,6 @@ export default function Bee(){
             "error" :  () => toast.error(message, toastOptions),
             "success": () => toast.success("Great +"+ currentAns.length.toString(), toastOptions)
         }
-
         typeToToast[type]?.()
     }
 
@@ -139,43 +124,60 @@ export default function Bee(){
         setCurrentAns("")
     }
 
-    useEffect( () =>{
+    useEffect(() =>{
         if(currentAns.length > 14){
             submitAns()
         }
-    }, [currentAns])
+    }, [currentAns]);
+
     return(
-    <div className="min-h-screen flex flex-col items-center justify-between gap-6 px-4 py-6 sm:py-10 bg-gradient-to-b from-gray-50 to-gray-100  transition-all duration-300">
-      <div className="w-full sm:w-3/4 md:w-1/2">
-        <ProgressBar score={score} />
-      </div>
+    <div className="min-h-screen flex flex-col items-center justify-between gap-6 px-4 py-6 sm:py-10 bg-yellow-50 relative overflow-hidden transition-all duration-300">
 
-      <WordDisplay word={currentAns} mainLetter={spellCollection.mainLetter} />
+        {/* Hive background (hexagons) */}
+        <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
+            {Array.from({length: 10}).map((_, i) => (
+                <div key={i} className={`absolute w-16 h-16 sm:w-24 sm:h-24 bg-yellow-200 border-2 border-yellow-400 rounded-[20%] opacity-20`}
+                     style={{
+                        top: `${Math.random()*100}%`,
+                        left: `${Math.random()*100}%`,
+                        transform: `rotate(${Math.random()*360}deg)`
+                     }} />
+            ))}
+        </div>
 
-      <div className="flex justify-center items-end w-full mt-10 sm:mt-16 mb-20 sm:mb-24">
-        <SpellGrid spellCollection={spellCollection} letterPress={letterPress}/>
-      </div>
+        {/* Progress bar */}
+        <div className="w-full sm:w-3/4 md:w-1/2 z-10">
+            <ProgressBar score={score} />
+        </div>
 
-      <div className="flex flex-wrap gap-4 justify-center items-center w-full sm:w-auto mt-10">
-        <button className="bg-white border border-gray-300 text-lg sm:text-xl px-5 py-3 rounded-full shadow-md hover:shadow-lg active:scale-95 transition-transform" onClick={() => setCurrentAns(currentAns.substring(0, currentAns.length - 1))}>
-          Delete
-        </button>
+        <WordDisplay word={currentAns} mainLetter={spellCollection.mainLetter} />
 
-        <RotateCcw className="cursor-pointer p-3 rounded-full bg-white  border border-gray-300 hover:shadow-lg active:scale-95 transition-transform" size={48} onClick={() => setCurrentAns("")}/>
+        <div className="flex justify-center items-end w-full mt-10 sm:mt-16 mb-20 sm:mb-24 z-10">
+            <SpellGrid spellCollection={spellCollection} letterPress={letterPress}/>
+        </div>
 
-        <button className="bg-indigo-500 hover:bg-indigo-600 text-white text-lg sm:text-xl px-6 py-3 rounded-full shadow-md active:scale-95 transition-transform" onClick={submitAns}>
-          Submit
-        </button>
-      </div>
+        <div className="flex flex-wrap gap-4 justify-center items-center w-full sm:w-auto mt-10 z-10">
+            <button className="bg-white border border-gray-300 text-lg sm:text-xl px-5 py-3 rounded-full shadow-md hover:shadow-lg active:scale-95 transition-transform" 
+                onClick={() => setCurrentAns(currentAns.substring(0, currentAns.length - 1))}>
+                Delete
+            </button>
 
-      <div className="w-full sm:w-3/4 md:w-1/2">
-        <AnsDisplay answers={Array.from(spellCollection.submittedAnswers.values())}/>
-      </div>
+            <RotateCcw className="cursor-pointer p-3 rounded-full bg-white border border-gray-300 hover:shadow-lg active:scale-95 transition-transform" size={48} 
+                onClick={() => setCurrentAns("")}/>
 
-      <InvisibleInput text={currentAns} handleTextChange={handleTextChange} onEnter={submitAns} disabled={disabled}/>
+            <button className="bg-yellow-500 hover:bg-yellow-600 text-white text-lg sm:text-xl px-6 py-3 rounded-full shadow-md active:scale-95 transition-transform" 
+                onClick={submitAns}>
+                Submit
+            </button>
+        </div>
 
+        <div className="w-full sm:w-3/4 md:w-1/2 z-10">
+            <AnsDisplay answers={Array.from(spellCollection.submittedAnswers.values())}/>
+        </div>
+
+        <InvisibleInput text={currentAns} handleTextChange={handleTextChange} onEnter={submitAns} disabled={disabled}/>
         <ToastContainer position="bottom-center" autoClose={2500} hideProgressBar draggable/>
+
     </div>
     )
-
 }

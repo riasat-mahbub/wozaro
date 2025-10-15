@@ -130,31 +130,21 @@ export default function Word() {
   };
 
   const computeLetterStates = (answers: Answer[]) => {
-  const states: Record<string, "correct" | "present" | "absent" | "unused"> = {};
-
-  for (const ans of answers) {
-    if (!ans.isSubmitted) continue;
-
-    for (const { letter, state } of ans.letters) {
-      if (!letter) continue;
-      const upper = letter.toLowerCase();
-
-      // Upgrade logic: correct > present > absent > unused
-      const prev = states[upper];
-      if (state === "correct" || prev === "correct") {
-        states[upper] = "correct";
-      } else if (state === "present" || prev === "present") {
-        states[upper] = "present";
-      } else if (state === "absent" || !prev) {
-        states[upper] = "absent";
-      } else {
-        states[upper] = "unused";
+    const states: Record<string, "correct" | "present" | "absent" | "unused"> = {};
+    for (const ans of answers) {
+      if (!ans.isSubmitted) continue;
+      for (const { letter, state } of ans.letters) {
+        if (!letter) continue;
+        const upper = letter.toLowerCase();
+        const prev = states[upper];
+        if (state === "correct" || prev === "correct") states[upper] = "correct";
+        else if (state === "present" || prev === "present") states[upper] = "present";
+        else if (state === "absent" || !prev) states[upper] = "absent";
+        else states[upper] = "unused";
       }
     }
-  }
-
-  return states;
-};
+    return states;
+  };
 
   const handleKeyPress = (key: string) => {
     if (inputDisabled) return;
@@ -170,10 +160,30 @@ export default function Word() {
   };
 
   return (
-    <div className="flex flex-col items-center">
-        <BoxGrid answers={answers} numCol={MAX_COLS} todaysAnswer={todaysAnswer.current} />
-        <InvisibleInput text={text} handleTextChange={handleTextChange} onEnter={() => onFinish()} disabled={inputDisabled} />
-        <OnScreenKeyboard onKeyPress={(k) => handleKeyPress(k)} onEnter={() => onFinish()} onDelete={handleDelete} disabled={inputDisabled} letterStates={computeLetterStates(answers)}
+    <div className="flex flex-col items-center relative min-h-screen px-4 sm:px-8 md:px-16 py-12 bg-gradient-to-b from-gray-100 via-gray-200 to-gray-300 overflow-hidden">
+
+      {/* Traffic-light motif background shapes */}
+      {/* Red circles */}
+      <div className="absolute top-16 left-10 w-20 h-20 bg-red-500 rounded-full opacity-30 sm:w-28 sm:h-28 rotate-6"></div>
+      <div className="absolute bottom-1/4 right-1/5 w-24 h-24 bg-red-400 rounded-full opacity-25 sm:w-32 sm:h-32 rotate-12"></div>
+
+      {/* Yellow circles */}
+      <div className="absolute top-1/3 right-1/4 w-16 h-16 bg-yellow-400 rounded-full opacity-25 sm:w-24 sm:h-24 rotate-[-8deg]"></div>
+      <div className="absolute bottom-1/3 left-1/3 w-20 h-20 bg-yellow-300 rounded-full opacity-20 sm:w-28 sm:h-28 rotate-15"></div>
+
+      {/* Blue circles */}
+      <div className="absolute top-1/2 left-1/2 w-12 h-12 bg-blue-400 rounded-full opacity-25 sm:w-20 sm:h-20 rotate-[-12deg]"></div>
+      <div className="absolute bottom-1/5 right-1/2 w-16 h-16 bg-blue-300 rounded-full opacity-20 sm:w-24 sm:h-24 rotate-10"></div>
+
+      {/* Game components */}
+      <BoxGrid answers={answers} numCol={MAX_COLS} todaysAnswer={todaysAnswer.current} />
+      <InvisibleInput text={text} handleTextChange={handleTextChange} onEnter={() => onFinish()} disabled={inputDisabled} />
+      <OnScreenKeyboard 
+        onKeyPress={handleKeyPress} 
+        onEnter={() => onFinish()} 
+        onDelete={handleDelete} 
+        disabled={inputDisabled} 
+        letterStates={computeLetterStates(answers)}
       />
     </div>
   );
