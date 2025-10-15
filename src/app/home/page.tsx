@@ -1,7 +1,7 @@
 "use client"
 
 import LinkCard from "../components/LinkCard"
-import word from "../../../public/word.jpg"
+import word from "../../../public/word.png"
 import bee from "../../../public/bee.jpg"
 
 export default function Home(){
