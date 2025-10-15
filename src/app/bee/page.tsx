@@ -7,6 +7,7 @@ import { RotateCcw } from "lucide-react"
 import WordDisplay from "./components/WordDisplay"
 import { toast, ToastContainer, ToastOptions } from "react-toastify"
 import InvisibleInput from "./components/InvisibleInput"
+import ProgressBar from "./components/ProgressBar"
 
 
 export default function Bee(){
@@ -14,6 +15,7 @@ export default function Bee(){
     const MIN_LEN = 4
     const MAX_LEN = 14
     const LETTER_COUNT = 7;
+    const MAX_SCORE=  100
 
     const [spellCollection, setSpellCollection] = useState<SpellCollection>(new SpellCollection())
     const [currentAns, setCurrentAns] = useState("")
@@ -71,13 +73,20 @@ export default function Bee(){
             return filteredData
         }
 
-        const answers = generateAnswer()
+        const getTotalScore = (answers: string[]) =>{
+            let totalScore = 0;
+            answers.forEach( val =>{
+                totalScore+=val.length
+            })
+            return totalScore;
+        }
 
-        if(answers.length < 20){
+        const answers = generateAnswer()
+        const totalScore = getTotalScore(answers)
+        if(totalScore < MAX_SCORE){
             const randomLetters = getRandomLetters()
             setSpellCollection(new SpellCollection(randomLetters, randomLetters.charAt(Math.random() * LETTER_COUNT)))
         }else{
-            console.log(answers)
             setAnswers(answers)
         }
 
@@ -129,6 +138,9 @@ export default function Bee(){
     }, [currentAns])
     return(
         <div>
+            <div className="w-1/2 mx-auto">
+                <ProgressBar score={score}/>
+            </div>
             <WordDisplay word={currentAns}/>
             <div className="flex justify-center items-end w-screen mt-40 mb-32">
                 <SpellGrid spellCollection={spellCollection} letterPress={letterPress}/>
