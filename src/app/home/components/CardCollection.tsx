@@ -2,8 +2,8 @@
 
 
 import LinkCard from "../../components/LinkCard"
-import word from "../../../../public/word.png"
-import bee from "../../../../public/bee.jpg"
+import word from "../../../../public/words.png"
+import bee from "../../../../public/BEE.png"
 
 export default function CardCollection(){
     return(
