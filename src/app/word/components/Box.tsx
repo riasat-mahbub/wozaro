@@ -8,7 +8,7 @@ interface BoxProps {
 export const Box = ({ letter, bg }: BoxProps) => {
   return (
     <div
-      className={`border-2 border-black flex items-center justify-center ${bg}
+      className={`border-4 border-black flex items-center justify-center ${bg}
       w-[clamp(2.5rem,6vw,5rem)] h-[clamp(2.5rem,6vw,5rem)] 
       sm:w-[clamp(3rem,5vw,6rem)] sm:h-[clamp(3rem,5vw,6rem)]
       md:w-[clamp(3.5rem,4vw,6.5rem)] md:h-[clamp(3.5rem,4vw,6.5rem)]

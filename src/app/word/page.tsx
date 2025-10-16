@@ -8,7 +8,7 @@ import { Answer } from "./types/Answer";
 import OnScreenKeyboard from "./components/OnScreenKeyboard";
 
 export default function Word() {
-  const MAX_ROW = 5;
+  const MAX_ROW = 6;
   const MAX_COLS = 5;
 
   const emptyLetter = { letter: "", state: "empty" as const };
@@ -170,10 +170,6 @@ export default function Word() {
       {/* Yellow circles */}
       <div className="absolute top-1/3 right-1/4 w-16 h-16 bg-yellow-400 rounded-full opacity-25 sm:w-24 sm:h-24 rotate-[-8deg]"></div>
       <div className="absolute bottom-1/3 left-1/3 w-20 h-20 bg-yellow-300 rounded-full opacity-20 sm:w-28 sm:h-28 rotate-15"></div>
-
-      {/* Blue circles */}
-      <div className="absolute top-1/2 left-1/2 w-12 h-12 bg-blue-400 rounded-full opacity-25 sm:w-20 sm:h-20 rotate-[-12deg]"></div>
-      <div className="absolute bottom-1/5 right-1/2 w-16 h-16 bg-blue-300 rounded-full opacity-20 sm:w-24 sm:h-24 rotate-10"></div>
 
       {/* Game components */}
       <BoxGrid answers={answers} numCol={MAX_COLS} todaysAnswer={todaysAnswer.current} />
