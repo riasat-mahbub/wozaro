@@ -61,7 +61,8 @@ export default function Hero(){
                     Where every game is a new shot at glory
                 </p>
                 
-                <motion.a 
+                <motion.a
+                    href="#cardCollection"
                     whileHover={{ scale: 1.2 }}
                     whileTap={{ scale: 0.8 }}
                 className="bg-red-600 text-white p-5 rounded-full shadow text-lg sm:text-xl md:text-2xl cursor-pointer">

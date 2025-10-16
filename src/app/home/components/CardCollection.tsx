@@ -7,20 +7,27 @@ import bee from "../../../../public/bee.jpg"
 
 export default function CardCollection(){
     return(
-        <div className="flex flex-row flex-wrap gap-6 w-full max-w-5xl mx-auto mt-10">
-            <LinkCard 
-                title="Word Game" 
-                description="Guess the correct word in a limited number of tries" 
-                href="/word" 
-                image={word} 
-            />
-            <LinkCard 
-                title="Bee Game" 
-                description="Guess words until you win" 
-                href="/bee" 
-                image={bee} 
-            />
-        </div>
+        <section className="h-screen">
+            <div className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-center leading-tight sm:leading-snug mb-6 text-gray-900">
+                Our Games
+            </div>
+
+            <div className="flex flex-row flex-wrap gap-6 w-full " id="cardCollection">
+                <LinkCard 
+                    title="Word Game" 
+                    description="Guess the correct word in a limited number of tries" 
+                    href="/word" 
+                    image={word} 
+                />
+                <LinkCard 
+                    title="Bee Game" 
+                    description="Guess words until you win" 
+                    href="/bee" 
+                    image={bee} 
+                />
+            </div>
+        </section>
+
 
     )
 }

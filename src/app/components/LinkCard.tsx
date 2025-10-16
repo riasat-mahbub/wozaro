@@ -15,7 +15,7 @@ export default function LinkCard({ title, description, href, image }: LinkCardPr
   return (
     <Link
       href={href}
-      className=" block w-full sm:w-[20rem] md:w-[24rem] bg-white border border-gray-200 rounded-2xl shadow-md p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:border-blue-400 active:scale-95">
+      className=" block w-full sm:w-[20rem] md:w-[24rem] bg-white border border-gray-200 rounded-2xl shadow-md p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:border-4 active:scale-95">
       <div className="flex flex-col h-full justify-between">
 
         {image && (
