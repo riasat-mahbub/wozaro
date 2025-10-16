@@ -9,6 +9,7 @@ import { toast, ToastContainer, ToastOptions } from "react-toastify"
 import InvisibleInput from "./components/InvisibleInput"
 import ProgressBar from "./components/ProgressBar"
 import AnsDisplay from "./components/AnsDisplay"
+import WinPopup from "../components/WinPopup"
 
 export default function Bee(){
 
@@ -22,6 +23,7 @@ export default function Bee(){
     const [answers, setAnswers] = useState<string[]>([]);
     const [score, setScore] = useState<number>(0);
     const [disabled, setDisabled] = useState(false);
+    const [isWin, setIsWin] = useState(false)
 
 
     const hiveShapes = useRef<{top: string, left: string, rotate: string}[]>([]);
@@ -91,7 +93,7 @@ export default function Bee(){
 
     useEffect(() =>{
         if(score>=MAX_SCORE){
-            console.log("You have won");
+            setIsWin(true)
             setDisabled(true);
         }
     }, [score]);
@@ -179,7 +181,9 @@ export default function Bee(){
 
         <InvisibleInput text={currentAns} handleTextChange={handleTextChange} onEnter={submitAns} disabled={disabled}/>
         <ToastContainer position="bottom-center" autoClose={2500} hideProgressBar draggable/>
-
+        {isWin && 
+            <WinPopup text={`Congratulations on finding all words`} />
+        }
     </div>
     )
 }

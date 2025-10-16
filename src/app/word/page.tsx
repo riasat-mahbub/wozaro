@@ -6,6 +6,7 @@ import InvisibleInput from "./components/InvisibleInput";
 import { generateTodaysAnswer } from "./data/todaysAnswer";
 import { Answer } from "./types/Answer";
 import OnScreenKeyboard from "./components/OnScreenKeyboard";
+import WinPopup from "../components/WinPopup";
 
 export default function Word() {
   const MAX_ROW = 6;
@@ -24,6 +25,8 @@ export default function Word() {
   const [currentRow, setCurrentRow] = useState<number>(0);
   const [text, setText] = useState<string>("");
   const [inputDisabled, setInputDisabled] = useState(false);
+  const [gameState, setGameState] = useState<"win" | "lose" | "playing">("playing");
+  
 
   const todaysAnswer = useRef<string>("");
   useEffect(() => {
@@ -115,7 +118,7 @@ export default function Word() {
 
     if (guess === target) {
       setInputDisabled(true);
-      console.log("WINNER");
+      setGameState("win");
     } else {
       setCurrentRow((r) => {
         const next = r + 1;
@@ -162,16 +165,12 @@ export default function Word() {
   return (
     <div className="flex flex-col items-center relative min-h-screen px-4 sm:px-8 md:px-16 py-12 bg-gradient-to-b from-gray-100 via-gray-200 to-gray-300 overflow-hidden">
 
-      {/* Traffic-light motif background shapes */}
-      {/* Red circles */}
       <div className="absolute top-16 left-10 w-20 h-20 bg-red-500 rounded-full opacity-30 sm:w-28 sm:h-28 rotate-6"></div>
       <div className="absolute bottom-1/4 right-1/5 w-24 h-24 bg-red-400 rounded-full opacity-25 sm:w-32 sm:h-32 rotate-12"></div>
 
-      {/* Yellow circles */}
       <div className="absolute top-1/3 right-1/4 w-16 h-16 bg-yellow-400 rounded-full opacity-25 sm:w-24 sm:h-24 rotate-[-8deg]"></div>
       <div className="absolute bottom-1/3 left-1/3 w-20 h-20 bg-yellow-300 rounded-full opacity-20 sm:w-28 sm:h-28 rotate-15"></div>
 
-      {/* Game components */}
       <BoxGrid answers={answers} numCol={MAX_COLS} todaysAnswer={todaysAnswer.current} />
       <InvisibleInput text={text} handleTextChange={handleTextChange} onEnter={() => onFinish()} disabled={inputDisabled} />
       <OnScreenKeyboard 
@@ -181,6 +180,10 @@ export default function Word() {
         disabled={inputDisabled} 
         letterStates={computeLetterStates(answers)}
       />
+
+      {gameState==="win" && 
+        <WinPopup text={`Congratulations on winning the game in ${currentRow+1} tries`} />
+      }
     </div>
   );
 }
