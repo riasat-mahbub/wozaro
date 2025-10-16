@@ -7,6 +7,7 @@ import { generateTodaysAnswer } from "./data/todaysAnswer";
 import { Answer } from "./types/Answer";
 import OnScreenKeyboard from "./components/OnScreenKeyboard";
 import WinPopup from "../components/WinPopup";
+import LosePopup from "../components/LosePopup";
 
 export default function Word() {
   const MAX_ROW = 6;
@@ -124,6 +125,7 @@ export default function Word() {
         const next = r + 1;
         if (next >= MAX_ROW) {
           setInputDisabled(true);
+          setGameState("lose")
         }
         return next;
       });
@@ -183,6 +185,10 @@ export default function Word() {
 
       {gameState==="win" && 
         <WinPopup text={`Congratulations on winning the game in ${currentRow+1} tries`} />
+      }
+
+      {gameState==="lose" && 
+        <LosePopup text={`You are out of guesses 😞`} />
       }
     </div>
   );
