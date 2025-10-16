@@ -9,13 +9,17 @@ interface LinkCardProps {
   description: string
   href: string
   image?: StaticImageData;
+  disabled?: boolean
 }
 
-export default function LinkCard({ title, description, href, image }: LinkCardProps) {
+export default function LinkCard({ title, description, href, image, disabled }: LinkCardProps) {
   return (
     <Link
       href={href}
-      className=" block w-full sm:w-[20rem] md:w-[24rem] bg-white border border-gray-200 rounded-2xl shadow-md p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:border-4 active:scale-95">
+      onClick={(e) => disabled && e.preventDefault() }
+      className={`block w-full sm:w-[20rem] md:w-[24rem] bg-white border border-gray-200 rounded-2xl shadow-md p-6 
+      transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:border-4 active:scale-95
+      ${disabled && "bg-gray-100 opacity-70 cursor-not-allowed"}`}>
       <div className="flex flex-col h-full justify-between">
 
         {image && (
